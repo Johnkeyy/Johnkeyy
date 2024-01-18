@@ -1,0 +1,70 @@
+_G.HeadSize = 10
+_G.Disabled = true
+game:GetService('RunService').RenderStepped:connect(function()
+if _G.Disabled then
+for i,v in next, game:GetService('Players'):GetPlayers() do
+if v.Name ~= game:GetService('Players').LocalPlayer.Name then
+pcall(function()
+v.Character.Head.Size = Vector3.new(_G.HeadSize,_G.HeadSize,_G.HeadSize)
+v.Character.Head.Transparency = 1
+v.Character.Head.BrickColor = BrickColor.new("Red")
+v.Character.Head.Material = "Neon"
+v.Character.Head.CanCollide = false
+v.Character.Head.Massless = true
+end)
+end
+end
+end
+end)
+-- CW | Inf. Stamina & No Jump Cooldown --
+-- Made by neexx on V3rm --
+
+for i,v in pairs(getgc(true)) do
+   if typeof(v) == "table" and rawget(v, "getIsMaxed") then
+       v.getIsMaxed = function()
+           return false
+       end
+       v.getFlags = function()
+           return 1
+       end
+       v.addFlags = function(a,b)
+           a:setFlags(0)
+           return
+       end
+   end
+   -- "There was another script here but it caused the user to crash (lag out), so it had to be removed" -KiwisASkid --
+   if typeof(v) == "table" and rawget(v, "spawnCharacter") then
+       local oldfunc = v.spawnCharacter
+       v.SpawnCharacter = function(a)
+           for _,f in pairs(getgc(true)) do
+               if typeof(f) == "table" and rawget(f, "getIsMaxed") then
+                   f.getIsMaxed = function()
+                       return false
+                   end
+                   f.getFlags = function()
+                       return 1
+                   end
+                   f.addFlags = function(aa,b)
+                       aa:setFlags(0)
+                       return
+                   end
+               end
+           end
+       end
+   end
+   if typeof(v) == "table" and rawget(v, "getCanJump") then
+       v.getCanJump = function()
+           return true
+       end
+   end
+   if typeof(v) == "table" and rawget(v, "JUMP_DELAY_ADD") then
+       v.JUMP_DELAY_ADD = 0.5
+   end
+   if typeof(v) == "table" and rawget(v, "_setStamina") then
+       v._setStamina = function(a, b)
+           a._stamina = math.huge
+           a._staminaChangedSignal:Fire(99)
+       end
+   end
+end
+game.StarterGui:SetCore("SendNotification", {Title = "CB", Text = "Script loaded, "..game.Players.LocalPlayer.DisplayName..".", Duration = 4,})
